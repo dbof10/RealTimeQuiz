@@ -1,0 +1,9 @@
+server:
+  port: 8090
+logging:
+  level:
+    com.kahoot.socket.QuizWebSocketHandler: DEBUG
+    org.springframework.data.redis.listener: TRACE
+    org.springframework.data.redis.connection.lettuce: TRACE
+
+
