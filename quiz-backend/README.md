@@ -1,43 +1,50 @@
-# Quiz System Template
+# 🧠 Kahoot Real-Time Quiz Backend
 
-## Overview
+This project powers a real-time vocabulary quiz system designed for live multi-user participation, scoring, and leaderboard updates. The backend is structured into modular services for scalability and clarity.
 
-This is a multi-module Gradle project for a real-time quiz system.
+---
 
-## Modules
+## 🗂️ Project Modules
 
-- **core**: REST API and business logic (join, answer).
-- **redis-integration**: Redis repositories and event publisher.
-- **realtime-ws**: WebSocket service for real-time messaging.
+| Module             | Description                                           |
+|--------------------|-------------------------------------------------------|
+| `core`             | Quiz domain logic, scoring, persistence,              |
+| `realtime-ws`      | WebSocket service that receives/sends real-time messages |
 
-## Setup
+---
 
-### Generate Gradle Wrapper
+## 🚀 Running the Backend Locally
 
-Run in the root directory:
+### ✅ Prerequisites
 
-```bash
-gradle wrapper
-```
+- [Java 21+](https://adoptium.net/)
+- [Gradle 8+](https://gradle.org/install/)
+- [Redis](https://redis.io/docs/getting-started/installation/) (must be installed natively)
 
-### Build
+---
 
-```bash
-./gradlew build
-```
-
-### Run Services
+### 📦 Install Redis (macOS with Homebrew)
 
 ```bash
-# Core API
-java -jar core/build/libs/core-0.1.0.jar
-
-# Real-time WebSocket
-java -jar realtime-ws/build/libs/realtime-ws-0.1.0.jar
+brew install redis
+brew services start redis
 ```
 
-### Docker Compose
+▶️ Start Services
+1. Start the Quiz Service (core)
 
 ```bash
-docker-compose up --build
+./gradlew :core:bootRun
 ```
+Runs the backend logic that handles scoring, ranking, and leaderboard updates. Listens to Kafka events like quiz.answer_submitted and quiz.participant_disconnected.
+
+2. Start the Real-Time WebSocket Server (realtime-ws)
+```bash
+./gradlew :realtime-ws:bootRun
+```
+Hosts a WebSocket server. Clients can connect using:
+
+```bash
+ws://localhost:8081/ws?quizId=...&participantId=...
+```
+Emits Kafka events for quiz participation and answers.
